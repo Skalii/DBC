@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata modelVersion="1.1.0">
-  <groupId>com.dbc</groupId>
-  <artifactId>com.dbc.connect</artifactId>
+  <groupId>com.skaliy</groupId>
+  <artifactId>com.skaliy.dbc</artifactId>
   <version>1.0-SNAPSHOT</version>
   <versioning>
     <snapshot>
-      <timestamp>20171104.232534</timestamp>
+      <timestamp>20171104.234045</timestamp>
       <buildNumber>1</buildNumber>
     </snapshot>
-    <lastUpdated>20171104232534</lastUpdated>
+    <lastUpdated>20171104234045</lastUpdated>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>1.0-20171104.232534-1</value>
-        <updated>20171104232534</updated>
+        <value>1.0-20171104.234045-1</value>
+        <updated>20171104234045</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>1.0-20171104.232534-1</value>
-        <updated>20171104232534</updated>
+        <value>1.0-20171104.234045-1</value>
+        <updated>20171104234045</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
