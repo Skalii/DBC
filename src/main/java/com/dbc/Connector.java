@@ -1,4 +1,4 @@
-package dbc;
+package com.dbc;
 
 import org.intellij.lang.annotations.Language;
 

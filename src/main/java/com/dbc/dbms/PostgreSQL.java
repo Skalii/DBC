@@ -1,6 +1,6 @@
-package dbc.dbms;
+package com.dbc.dbms;
 
-import dbc.Connector;
+import com.dbc.Connector;
 
 public class PostgreSQL extends Connector{
 
