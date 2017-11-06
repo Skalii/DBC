@@ -7,7 +7,6 @@ import java.sql.*;
 
 public class Connector {
     private Connection connection;
-    private Statement statement;
 
     public Connector(String driverClass, String driverUrl, String url, String user, String password) {
         try {
@@ -29,7 +28,7 @@ public class Connector {
 
     public void query(@Language("SQL") String sql) {
         try {
-            statement = connection.createStatement(
+            Statement statement = connection.createStatement(
                     ResultSet.TYPE_SCROLL_SENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             statement.executeUpdate(sql);
@@ -41,7 +40,7 @@ public class Connector {
 
     public String[][] queryResult(@Language("SQL") String sql) {
         try {
-            statement = connection.createStatement(
+            Statement statement = connection.createStatement(
                     ResultSet.TYPE_SCROLL_SENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
 
@@ -74,7 +73,15 @@ public class Connector {
 
     }
 
-    public boolean isConnect() {
+    public boolean isConnected() {
         return connection != null;
+    }
+
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
