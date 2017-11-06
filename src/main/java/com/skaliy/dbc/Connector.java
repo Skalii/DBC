@@ -1,6 +1,7 @@
 package com.skaliy.dbc;
 
 import org.intellij.lang.annotations.Language;
+import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 
@@ -12,10 +13,14 @@ public class Connector {
         try {
             Class.forName(driverClass);
 
-            connection = DriverManager.getConnection(
-                    "jdbc:" + driverUrl + "://" + url,
-                    user,
-                    password);
+            try {
+                connection = DriverManager.getConnection(
+                        "jdbc:" + driverUrl + "://" + url,
+                        user,
+                        password);
+            } catch (PSQLException exception) {
+                connection = null;
+            }
 
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -67,5 +72,9 @@ public class Connector {
         }
         return new String[][]{};
 
+    }
+
+    public boolean isConnect() {
+        return connection != null;
     }
 }
