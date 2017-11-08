@@ -4,6 +4,7 @@ import org.intellij.lang.annotations.Language;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
+import java.util.Objects;
 
 public class Connector {
     private Connection connection;
@@ -44,7 +45,13 @@ public class Connector {
                     ResultSet.TYPE_SCROLL_SENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
 
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet;
+
+            try {
+                resultSet = statement.executeQuery(sql);
+            } catch (PSQLException e) {
+                return new String[][]{{"SQL QUERY ERROR"}};
+            }
 
             int col = resultSet.getMetaData().getColumnCount();
             resultSet.last();
