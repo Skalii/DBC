@@ -1,10 +1,8 @@
 package com.skaliy.dbc;
 
 import org.intellij.lang.annotations.Language;
-import org.postgresql.util.PSQLException;
 
 import java.sql.*;
-import java.util.Objects;
 
 public class Connector {
     private Connection connection;
@@ -13,71 +11,53 @@ public class Connector {
         try {
             Class.forName(driverClass);
 
-            try {
-                connection = DriverManager.getConnection(
-                        "jdbc:" + driverUrl + "://" + url,
-                        user,
-                        password);
-            } catch (PSQLException exception) {
-                connection = null;
-            }
+            connection = DriverManager.getConnection(
+                    "jdbc:" + driverUrl + "://" + url,
+                    user,
+                    password);
 
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+            connection = null;
         }
     }
 
-    public void query(@Language("SQL") String sql) {
-        try {
-            Statement statement = connection.createStatement(
-                    ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
+    public String[][] query(boolean result, @Language("SQL") String sql) throws SQLException {
+
+        Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE);
+
+        if (!result) {
             statement.executeUpdate(sql);
             statement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return new String[][]{{"SQL MODIFY"}};
         }
-    }
 
-    public String[][] queryResult(@Language("SQL") String sql) {
-        try {
-            Statement statement = connection.createStatement(
-                    ResultSet.TYPE_SCROLL_SENSITIVE,
-                    ResultSet.CONCUR_UPDATABLE);
+        ResultSet resultSet;
 
-            ResultSet resultSet;
+        resultSet = statement.executeQuery(sql);
 
-            try {
-                resultSet = statement.executeQuery(sql);
-            } catch (PSQLException e) {
-                return new String[][]{{"SQL QUERY ERROR"}};
+        int col = resultSet.getMetaData().getColumnCount();
+        resultSet.last();
+        int row = resultSet.getRow();
+        String[][] resultRecords = new String[row][col];
+        resultSet.beforeFirst();
+
+        int i = 0;
+        while (resultSet.next()) {
+            for (int j = 0; j < col; j++) {
+                String val = resultSet.getString(j + 1);
+                if (val != null)
+                    resultRecords[i][j] = val;
             }
-
-            int col = resultSet.getMetaData().getColumnCount();
-            resultSet.last();
-            int row = resultSet.getRow();
-            String[][] result = new String[row][col];
-            resultSet.beforeFirst();
-
-            int i = 0;
-            while (resultSet.next()) {
-                for (int j = 0; j < col; j++) {
-                    String val = resultSet.getString(j + 1);
-                    if (val != null)
-                        result[i][j] = val;
-                }
-                i++;
-            }
-
-            resultSet.close();
-            statement.close();
-
-            return result;
-        } catch (SQLException e) {
-            e.printStackTrace();
+            i++;
         }
-        return new String[][]{};
 
+        resultSet.close();
+        statement.close();
+
+        return resultRecords;
     }
 
     public boolean isConnected() {
