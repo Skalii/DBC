@@ -7,19 +7,14 @@ import java.sql.*;
 public class Connector {
     private Connection connection;
 
-    public Connector(String driverClass, String driverUrl, String url, String user, String password) {
-        try {
-            Class.forName(driverClass);
+    public Connector(String driverClass, String driverUrl, String url, String user, String password) throws ClassNotFoundException, SQLException {
 
-            connection = DriverManager.getConnection(
-                    "jdbc:" + driverUrl + "://" + url,
-                    user,
-                    password);
+        Class.forName(driverClass);
 
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-            connection = null;
-        }
+        connection = DriverManager.getConnection(
+                "jdbc:" + driverUrl + "://" + url,
+                user,
+                password);
     }
 
     public String[][] query(boolean result, @Language("SQL") String sql) throws SQLException {
